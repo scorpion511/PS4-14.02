@@ -1,39 +1,3 @@
-/*
-    afterglow -- PlayStation 4 kernel exploit for firmware 14.00
-    Port to the raw13 host (WebKit entry), from the Lua original.
-
-    Copyright (C) 2026 well0nez
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
-    Ported from the Lua original, which ran inside a game process. This
-    file runs from WebKit, where the heap is groomed by someone else and the
-    page can go away mid-chain -- see the handle teardown at the bottom.
-    probeAfterglow() answers whether a given process can carry the exploit
-    at all; it fires nothing and patches nothing.
-
-    What the host must provide, and raw13 does:
-      sc(num, ...args)      syscall, returns {lo, hi, i32}
-      bufAddr(arrayBuffer)  int64 address of the backing store
-      p.read1/4/8           read in this process
-      p.write1/4/8          write in this process
-      p.readInto(u8, at, n)
-      keepAlive             array, so our buffers survive the collector
-      mark(tag, detail)     log
-    A way to call native code is NOT needed.
-*/
-
 import { int64 } from "./int64.js";
 
 const S = {
