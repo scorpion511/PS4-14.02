@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>SCORPION HOST PS4 FIRMWARE 14.02</title>
-    <style>
+       <style>
       :root {
         --bg: #05080b;
         --panel: rgba(8, 14, 20, 0.88);
@@ -63,29 +63,18 @@
         white-space: nowrap;
         text-shadow: 0 0 6px rgba(0, 229, 255, 0.6);
       }
-      /* Circular glowing & pulsing scorpion emblem */
+      /* Circular glowing scorpion emblem (static glow, no pulsing) */
       .meme {
         width: 90px;
         height: 90px;
         object-fit: cover;
         border-radius: 50%;
         border: 2px solid #00e5ff;
+        box-shadow: 0 0 15px #00e5ff, 
+                    0 0 30px #00e5ff, 
+                    inset 0 0 15px #00e5ff;
         display: block;
         margin: 14px auto 6px auto;
-        animation: logoPulse 1.6s ease-in-out infinite;
-      }
-      @keyframes logoPulse {
-        0%, 100% {
-          box-shadow: 0 0 10px #00e5ff, 
-                      0 0 20px #00e5ff, 
-                      inset 0 0 10px #00e5ff;
-        }
-        50% {
-          box-shadow: 0 0 20px #00e5ff, 
-                      0 0 40px #00e5ff, 
-                      0 0 60px #00e5ff, 
-                      inset 0 0 20px #00e5ff;
-        }
       }
       #spin {
         position: fixed;
