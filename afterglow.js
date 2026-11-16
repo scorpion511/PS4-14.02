@@ -1898,7 +1898,7 @@ async function attempt(ctx, opts) {
   STATE.ctx = ctx;
   opts = opts || {};
   STATE.retry = false;
-  say("afterglow -- ps4 kernel exploit, firmware " + FW_KEY + " (raw13 host)");
+  say("Ahmed Essam -- ps4 kernel exploit, firmware " + FW_KEY + " (SCORPION 🦂 host)");
 
   const missing = seedStubs();
   if (missing.length) {
