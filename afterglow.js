@@ -839,7 +839,7 @@ function qAt(buf, off) {
 
    The original issues this with the loader's native call. A host whose
    syscall primitive takes an arbitrary number could call syscall 11 straight;
-   raw13's sc() goes through a per-number stub table that has no entry for 11,
+   SCORPION's sc() goes through a per-number stub table that has no entry for 11,
    so the two byte userland stub stays and is entered with callAddr. */
 const GATE = 0x0a0, BODY = 0x0c0, OUT = 0x400, FLAG = 0x420, STAGE = 0x440;
 const STAGE_MAX = 0x400;
