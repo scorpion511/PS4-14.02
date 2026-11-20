@@ -1,66 +1,30 @@
-/*
-  launch.js — NanospeedGamer landing page controller
-  Countdown → auto-redirect to exploit chain, or manual start via button.
-  Referrer guard: only fires when reached from index.html in the same origin.
-*/
+/* The landing page: start the run on click.
+ *
+ * Leaving this page has to be a real navigation from it -- the referrer guard
+ * in jb.js arms the chain only when the run page was reached from here. */
 
-(function () {
-  "use strict";
+var TARGET = "log=1&afterglow=run&mode=goldhen";
 
-  const COUNTDOWN_SEC = 5;
-  const DEST = "launch.html?v=1402s&log=1&afterglow=run&mode=goldhen";
+var form = document.getElementById("pick");
+var countEl = document.getElementById("count");
 
-  const countEl = document.getElementById("count"); // <p class="status" id="count">
-  const content = document.querySelector(".content");
+function start() {
+  location.href = "jb.html?" + TARGET;
+}
 
-  function guardOk() {
-    return true; // key auth on index.html already protects the page
-  }
+form.addEventListener("submit", function (ev) {
+  ev.preventDefault();
+  start();
+});
 
-  /* ── inject start button ─────────────────────────────────────────────── */
-  const btn = document.createElement("button");
-  btn.id = "startBtn";
-  btn.textContent = "START NOW";
-  btn.style.display = "none"; // hidden until guard passes
-  if (content) content.appendChild(btn);
+/* A run that reached the kernel swaps the address for this page and leaves
+   the marker behind (jb.js, at the end of the chain). Coming up on that
+   address means the browser restored a finished run. */
+var DONE = false;
+try {
+} catch (e) {}
 
-  /* ── go ──────────────────────────────────────────────────────────────── */
-  function go() {
-    if (countEl) countEl.textContent = "[ EXECUTE ]";
-    if (btn) btn.disabled = true;
-    location.href = DEST;
-  }
-
-  /* ── blocked by referrer guard ───────────────────────────────────────── */
-  if (!guardOk()) {
-    if (countEl) countEl.textContent = "[ ACCESS DENIED — NAVIGATE FROM ROOT ]";
-    return; // stop — session restore, do not fire
-  }
-
-  /* ── show button now that we're cleared ─────────────────────────────── */
-  btn.style.display = "";
-  btn.addEventListener("click", function () {
-    clearInterval(timer);
-    go();
-  });
-
-  /* ── countdown ───────────────────────────────────────────────────────── */
-  let remaining = COUNTDOWN_SEC;
-
-  function tick() {
-    if (countEl) {
-      countEl.textContent =
-        remaining > 0
-          ? "[ LAUNCHING IN " + remaining + "... ]"
-          : "[ EXECUTE ]";
-    }
-    if (remaining <= 0) {
-      clearInterval(timer);
-      go();
-    }
-    remaining--;
-  }
-
-  tick(); // show initial value immediately
-  var timer = setInterval(tick, 1000);
-})();
+if (DONE) {
+  // If patch is active, replace the button inside the element container with status text
+  if (countEl) countEl.textContent = "kernel already patched";
+}
