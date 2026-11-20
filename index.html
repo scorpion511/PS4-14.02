@@ -344,26 +344,20 @@
       var matrixTimer = setInterval(drawMatrix, 40);
 
       /* ── unlock ─────────────────────────────────────────────────── */
-      function attempt() {
-        if (input.value === PASS) {
-          /* stop gate matrix, fade overlay, then inject scripts */
-          clearInterval(matrixTimer);
-          overlay.classList.add("fade-out");
-          setTimeout(function () {
-            overlay.classList.add("hidden");
-            var s1 = document.createElement("script");
-            s1.src = "matrix.js";
-            document.body.appendChild(s1);
+          function attempt() {
+        /* stop gate matrix, fade overlay, then inject scripts */
+        clearInterval(matrixTimer);
+        overlay.classList.add("fade-out");
+        setTimeout(function () {
+          overlay.classList.add("hidden");
+          var s1 = document.createElement("script");
+          s1.src = "matrix.js";
+          document.body.appendChild(s1);
 
-            var s2 = document.createElement("script");
-            s2.src = "launch.js";
-            document.body.appendChild(s2);
-          }, 500);
-        } else {
-          err.textContent = "incorrect — try again";
-          input.value = "";
-          input.focus();
-        }
+          var s2 = document.createElement("script");
+          s2.src = "launch.js";
+          document.body.appendChild(s2);
+        }, 500);
       }
 
       btn.addEventListener("click", attempt);
@@ -374,6 +368,7 @@
       input.focus();
     })();
   </script>
+
 
       
     <div style="position: fixed; bottom: 12px; left: 8px; z-index: 9999; text-align: center;">
