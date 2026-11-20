@@ -1,3 +1,39 @@
+/*
+    afterglow -- PlayStation 4 kernel exploit for firmware 14.00
+    Port to the raw13 host (WebKit entry), from the Lua original.
+
+    Copyright (C) 2026 well0nez
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+    Ported from the Lua original, which ran inside a game process. This
+    file runs from WebKit, where the heap is groomed by someone else and the
+    page can go away mid-chain -- see the handle teardown at the bottom.
+    probeAfterglow() answers whether a given process can carry the exploit
+    at all; it fires nothing and patches nothing.
+
+    What the host must provide, and raw13 does:
+      sc(num, ...args)      syscall, returns {lo, hi, i32}
+      bufAddr(arrayBuffer)  int64 address of the backing store
+      p.read1/4/8           read in this process
+      p.write1/4/8          write in this process
+      p.readInto(u8, at, n)
+      keepAlive             array, so our buffers survive the collector
+      mark(tag, detail)     log
+    A way to call native code is NOT needed.
+*/
+
 import { int64 } from "./int64.js";
 
 const S = {
@@ -839,7 +875,7 @@ function qAt(buf, off) {
 
    The original issues this with the loader's native call. A host whose
    syscall primitive takes an arbitrary number could call syscall 11 straight;
-   SCORPION's sc() goes through a per-number stub table that has no entry for 11,
+   raw13's sc() goes through a per-number stub table that has no entry for 11,
    so the two byte userland stub stays and is entered with callAddr. */
 const GATE = 0x0a0, BODY = 0x0c0, OUT = 0x400, FLAG = 0x420, STAGE = 0x440;
 const STAGE_MAX = 0x400;
@@ -1898,7 +1934,7 @@ async function attempt(ctx, opts) {
   STATE.ctx = ctx;
   opts = opts || {};
   STATE.retry = false;
-  say("Ahmed Essam -- ps4 kernel exploit, firmware " + FW_KEY + " (SCORPION 🦂 host)");
+  say("afterglow -- ps4 kernel exploit, firmware " + FW_KEY + " (raw13 host)");
 
   const missing = seedStubs();
   if (missing.length) {
@@ -1928,7 +1964,6 @@ async function attempt(ctx, opts) {
     if (m0.i32 !== -1 && sc(S.mprotect, v(m0.lo, m0.hi), 0x4000, 7).i32 === 0) {
       say("  this kernel is already open -- a run has succeeded on this boot.");
       say("  Not firing again; reboot the console for a fresh one.");
-	 
       return false;
     }
   }
